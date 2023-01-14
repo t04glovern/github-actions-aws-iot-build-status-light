@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'GitHub OIDC: t04glovern-github-actions-aws-iot-build-status-light | Stack: oidc-t04glovern-github-actions-aws-iot-build-status-light'
+
+Parameters:
+  FullRepoName:
+    Type: String
+    Default: t04glovern/github-actions-aws-iot-build-status-light
+
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: oidc-t04glovern-github-actions-aws-iot-build-status-light
+      Policies:
+        - PolicyName: oidc-t04glovern-github-actions-aws-iot-build-status-light
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iot:Publish
+                Resource: !Sub arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/t04glovern/github-builder
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${FullRepoName}:*
+
+Outputs:
+  OidcRoleAwsAccountId:
+    Value: !Ref AWS::AccountId
+  OidcRoleAwsRegion:
+    Value: !Ref AWS::Region
+  OidcRoleAwsRoleToAssume:
+    Value: !GetAtt Role.Arn

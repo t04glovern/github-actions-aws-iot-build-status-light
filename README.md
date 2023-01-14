@@ -48,4 +48,21 @@ sudo cp github-builder.service /etc/systemd/system/github-builder.service
 sudo systemctl daemon-reload
 sudo systemctl enable github-builder
 sudo systemctl start github-builder
+sudo systemctl status github-builder
+```
+
+## Deploy Example GitHub OIDC role
+
+```bash
+export AWS_REGION="ap-southeast-2"
+export GITHUB_USERNAME="t04glovern"
+export GITHUB_REPONAME="github-actions-aws-iot-build-status-light"
+
+aws cloudformation deploy \
+    --template-file oidc-role.yml \
+    --stack-name oidc-$GITHUB_USERNAME-$GITHUB_REPONAME \
+    --parameter-overrides \
+        FullRepoName=$GITHUB_USERNAME/$GITHUB_REPONAME \
+    --capabilities CAPABILITY_NAMED_IAM \
+    --region $AWS_REGION
 ```
