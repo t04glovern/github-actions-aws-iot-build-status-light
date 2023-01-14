@@ -33,4 +33,5 @@ jobs:
         aws iot-data publish \
           --topic t04glovern/github-builder \
           --region ap-southeast-2 \
+          --cli-binary-format raw-in-base64-out \
           --payload '{"status":"FAILED", "repo":"${{ github.repository }}", "commit":"${{ github.sha }}"}'
