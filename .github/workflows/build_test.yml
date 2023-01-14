@@ -10,7 +10,6 @@ jobs:
   deploy:
     name: Test Build
     runs-on: ubuntu-latest
-    needs: publish
     permissions:
       id-token: write
       contents: read
