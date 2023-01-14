@@ -43,7 +43,8 @@ Test the connection to AWS IoT
 Install the systemd service
 
 ```bash
-sudo cp github-builder /etc/systemd/system/github-builder
+cd /home/github-builder/github-actions-aws-iot-build-status-light
+sudo cp github-builder.service /etc/systemd/system/github-builder.service
 sudo systemctl daemon-reload
 sudo systemctl enable github-builder
 sudo systemctl start github-builder

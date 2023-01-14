@@ -4,6 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
+User=github-builder
 ExecStart=/usr/bin/python3 /home/github-builder/github-actions-aws-iot-build-status-light/main.py \
     --endpoint a3fwrozawgvob8-ats.iot.ap-southeast-2.amazonaws.com \
     --ca_file /home/github-builder/github-actions-aws-iot-build-status-light/certs/root-CA.crt \
