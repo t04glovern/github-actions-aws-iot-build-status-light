@@ -44,6 +44,27 @@ cmdUtils.get_args()
 received_count = 0
 received_all_event = threading.Event()
 
+import serial
+import serial.tools.list_ports
+
+# Trigger cool lights
+def build_failure():
+    try:
+        logger.info("Listing serial ports")
+        ports = serial.tools.list_ports.comports()
+        for port, desc, hwid in sorted(ports):
+            logger.info("Found port: {}: {} [{}]".format(port, desc, hwid))
+            if "Arduino Leonardo" in desc:
+                ser = serial.Serial(port, 115200, timeout=1)
+                for x in range(10):
+                    ser.write(b'all RED;')
+                    time.sleep(0.25)
+                    ser.write(b'all BLACK;')
+                    time.sleep(0.25)
+                ser.close()
+    except serial.SerialException as error:
+        logger.error("Serial didn't serial good. error: {}".format(error))
+
 # Callback when connection is accidentally lost.
 def on_connection_interrupted(connection, error, **kwargs):
     logger.info("Connection interrupted. error: {}".format(error))
@@ -74,6 +95,7 @@ def on_resubscribe_complete(resubscribe_future):
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, dup, qos, retain, **kwargs):
     logger.info("Received message from topic '{}': {}".format(topic, payload))
+    build_failure()
     global received_count
     received_count += 1
     if received_count == cmdUtils.get_command("count"):
