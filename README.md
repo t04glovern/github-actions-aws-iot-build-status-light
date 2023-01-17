@@ -21,8 +21,13 @@ pip3 install -r requirements.txt
 Replace the policy that was set up with single-device provisioning with our policy. Run this command from a system with the AWS CLI installed on it.
 
 ```bash
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
+export AWS_REGION="ap-southeast-2"
+export GITHUB_ORG="t04glovern"
+
+envsubst < "policy.json.template" > "policy.json"
 aws iot create-policy-version \
-    --region ap-southeast-2 \
+    --region $AWS_REGION \
     --policy-name github-builder-Policy \
     --policy-document file://policy.json \
     --set-as-default

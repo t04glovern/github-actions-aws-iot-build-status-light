@@ -48,7 +48,7 @@ import serial
 import serial.tools.list_ports
 
 # Trigger cool lights
-def build_failure():
+def set_colour(colour):
     try:
         logger.info("Listing serial ports")
         ports = serial.tools.list_ports.comports()
@@ -56,11 +56,7 @@ def build_failure():
             logger.info("Found port: {}: {} [{}]".format(port, desc, hwid))
             if "Arduino Leonardo" in desc:
                 ser = serial.Serial(port, 115200, timeout=1)
-                for x in range(10):
-                    ser.write(b'all RED;')
-                    time.sleep(0.25)
-                    ser.write(b'all BLACK;')
-                    time.sleep(0.25)
+                ser.write("all {};".format(colour).encode())
                 ser.close()
     except serial.SerialException as error:
         logger.error("Serial didn't serial good. error: {}".format(error))
@@ -95,7 +91,13 @@ def on_resubscribe_complete(resubscribe_future):
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, dup, qos, retain, **kwargs):
     logger.info("Received message from topic '{}': {}".format(topic, payload))
-    build_failure()
+    message = json.loads(payload)
+    if message['status'] == 'SUCCESS':
+        set_colour('GREEN')
+    elif message['status'] == 'FAILURE':
+        set_colour('RED')
+    else:
+        set_colour('BLACK')
     global received_count
     received_count += 1
     if received_count == cmdUtils.get_command("count"):
