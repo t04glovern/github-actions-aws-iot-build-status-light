@@ -94,7 +94,7 @@ def on_message_received(topic, payload, dup, qos, retain, **kwargs):
     message = json.loads(payload)
     if message['status'] == 'SUCCESS':
         set_colour('GREEN')
-    elif message['status'] == 'FAILURE':
+    elif message['status'] == 'FAILED':
         set_colour('RED')
     else:
         set_colour('BLACK')
