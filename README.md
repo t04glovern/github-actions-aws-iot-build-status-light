@@ -60,14 +60,15 @@ sudo systemctl status github-builder
 
 ```bash
 export AWS_REGION="ap-southeast-2"
-export GITHUB_USERNAME="t04glovern"
+export GITHUB_ORG="t04glovern"
 export GITHUB_REPONAME="github-actions-aws-iot-build-status-light"
 
 aws cloudformation deploy \
     --template-file oidc-role.yml \
-    --stack-name oidc-$GITHUB_USERNAME-$GITHUB_REPONAME \
+    --stack-name oidc-$GITHUB_ORG-$GITHUB_REPONAME \
     --parameter-overrides \
-        FullRepoName=$GITHUB_USERNAME/$GITHUB_REPONAME \
+        GitHubOrgName=$GITHUB_ORG \
+        GitHubRepoName=$GITHUB_REPONAME \
     --capabilities CAPABILITY_NAMED_IAM \
     --region $AWS_REGION
 ```

@@ -7,7 +7,7 @@
         "iot:Receive"
       ],
       "Resource": [
-        "arn:aws:iot:$AWS_REGION-$AWS_ACCOUNT_ID:topic/t04glovern/github-builder"
+        "arn:aws:iot:$AWS_REGION-$AWS_ACCOUNT_ID:topic/$GITHUB_ORG/github-builder"
       ]
     },
     {

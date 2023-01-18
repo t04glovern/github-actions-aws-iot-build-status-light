@@ -1,25 +1,26 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'GitHub OIDC: t04glovern-github-actions-aws-iot-build-status-light | Stack: oidc-t04glovern-github-actions-aws-iot-build-status-light'
+Description: 'GitHub OIDC: github-actions-aws-iot-build-status-light'
 
 Parameters:
-  FullRepoName:
+  GitHubOrgName:
     Type: String
-    Default: t04glovern/github-actions-aws-iot-build-status-light
+  GitHubRepoName:
+    Type: String
 
 Resources:
   Role:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: oidc-t04glovern-github-actions-aws-iot-build-status-light
+      RoleName: oidc-${GitHubOrgName}-${GitHubRepoName}
       Policies:
-        - PolicyName: oidc-t04glovern-github-actions-aws-iot-build-status-light
+        - PolicyName: aws-iot-publish
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
                 Action:
                   - iot:Publish
-                Resource: !Sub arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/t04glovern/github-builder
+                Resource: !Sub arn:${AWS::Partition}:iot:${AWS::Region}:${AWS::AccountId}:topic/${GitHubOrgName}/github-builder
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
