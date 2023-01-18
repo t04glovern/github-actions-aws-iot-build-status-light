@@ -37,7 +37,7 @@ cmdUtils.register_command("key", "<path>", "Path to your key in PEM format.", Tr
 cmdUtils.register_command("cert", "<path>", "Path to your client certificate in PEM format.", True, str)
 cmdUtils.register_command("port", "<int>", "Connection port. AWS IoT supports 443 and 8883 (optional, default=auto).", type=int)
 cmdUtils.register_command("client_id", "<str>", "Client ID to use for MQTT connection (optional, default='test-*').", default="test-" + str(uuid4()))
-cmdUtils.register_command("count", "<int>", "The number of messages to send (optional, default='10').", default=10, type=int)
+cmdUtils.register_command("count", "<int>", "The number of messages to send (optional, default='0').", default=0, type=int)
 # Needs to be called so the command utils parse the commands
 cmdUtils.get_args()
 
