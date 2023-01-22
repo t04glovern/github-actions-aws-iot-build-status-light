@@ -33,6 +33,16 @@ aws iot create-policy-version \
     --set-as-default
 ```
 
+Generate your systemd service file
+
+```bash
+export AWS_REGION="ap-southeast-2"
+export GITHUB_ORG="t04glovern"
+export AWS_IOT_ENDPOINT=$(aws iot describe-endpoint --endpoint-type iot:Data-ATS --region $AWS_REGION | jq -r '.endpointAddress')
+
+envsubst < "github-builder.service.template" > "github-builder.service"
+```
+
 Test the connection to AWS IoT
 
 ```bash
@@ -62,6 +72,7 @@ sudo systemctl status github-builder
 export AWS_REGION="ap-southeast-2"
 export GITHUB_ORG="t04glovern"
 export GITHUB_REPONAME="github-actions-aws-iot-build-status-light"
+export CREATE_OIDC_PROVIDER='false'
 
 aws cloudformation deploy \
     --template-file oidc-role.yml \
@@ -69,6 +80,7 @@ aws cloudformation deploy \
     --parameter-overrides \
         GitHubOrgName=$GITHUB_ORG \
         GitHubRepoName=$GITHUB_REPONAME \
+        CreateGitHubOidcProvider=$CREATE_OIDC_PROVIDER \
     --capabilities CAPABILITY_NAMED_IAM \
     --region $AWS_REGION
 ```

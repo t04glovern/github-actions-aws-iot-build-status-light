@@ -6,8 +6,29 @@ Parameters:
     Type: String
   GitHubRepoName:
     Type: String
+  GithubTokenThumbprint:
+    Type: String
+    Default: 6938fd4d98bab03faadb97b34396831e3780aea1
+  CreateGitHubOidcProvider:
+    Type: String
+    Default: true
+    AllowedValues: [true, false]
+
+Conditions:
+  ShouldCreateGitHubOidcProvider:
+    !Equals [true, !Ref CreateGitHubOidcProvider]
 
 Resources:
+  GithubOidcProvider:
+    Condition: ShouldCreateGitHubOidcProvider
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ThumbprintList:
+        - !Ref GithubTokenThumbprint
+      ClientIdList:
+        - sts.amazonaws.com
+
   Role:
     Type: AWS::IAM::Role
     Properties:

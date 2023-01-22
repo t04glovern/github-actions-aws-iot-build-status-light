@@ -6,12 +6,12 @@ After=multi-user.target
 Type=simple
 User=github-builder
 ExecStart=/usr/bin/python3 /home/github-builder/github-actions-aws-iot-build-status-light/main.py \
-    --endpoint a3fwrozawgvob8-ats.iot.ap-southeast-2.amazonaws.com \
+    --endpoint $AWS_IOT_ENDPOINT \
     --ca_file /home/github-builder/github-actions-aws-iot-build-status-light/certs/root-CA.crt \
     --cert /home/github-builder/github-actions-aws-iot-build-status-light/certs/github-builder.cert.pem \
     --key /home/github-builder/github-actions-aws-iot-build-status-light/certs/github-builder.private.key \
     --client_id github-builder \
-    --topic t04glovern/github-builder
+    --topic $GITHUB_ORG/github-builder
 Restart=on-abort
 
 [Install]
